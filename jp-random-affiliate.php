@@ -47,6 +47,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
 define( 'JP_RAND_AFF_SLUG', plugin_basename( __FILE__ ) );
 define( 'JP_RAND_AFF_URL', plugin_dir_url( __FILE__ ) );
 define( 'JP_RAND_AFF_DIR', plugin_dir_path( __FILE__ ) );
+define( 'JP_RAND_AFF_VERSION', '0.0.1' );
 
 define( 'JP_RAND_AFF_MAIN_POD', 'jp_rand_aff' );
 define( 'JP_RAND_AFF_SET_POD', 'jp_rand_aff_set' );
@@ -73,7 +74,7 @@ class JP_Rand_AFF {
 		/**
 		 * Plugin Setup
 		 */
-		register_activation_hook( __FILE__, array( $this, 'activate' ) );
+		add_action( 'init', array( $this, 'setup' ) );
 		register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
 		// Localize our plugin
@@ -90,6 +91,8 @@ class JP_Rand_AFF {
 
 		//Require Pods ACT component
 		add_action( 'plugins_loaded', array( $this, 'require_act' ) );
+
+
 
 	}
 
@@ -110,15 +113,6 @@ class JP_Rand_AFF {
 
 		return $instance;
 
-	}
-
-	/**
-	 * Activation function
-	 *
-	 * @since 0.0.1
-	 */
-	public function activate() {
-		return $this->setup_class();
 	}
 
 	/**
@@ -196,9 +190,16 @@ class JP_Rand_AFF {
 	/**
 	 * Setup the Pods
 	 *
+	 * Check if we have done setup and if not, do it.
+	 *
 	 * @returns message about Pods being created
 	 */
-	public function setup_pods() {
+	public function setup() {
+		$setup = get_option( 'jp_rand_aff_setup', false );
+		if ( ! $setup  || ( isset( $setup[ 'setup-complete' ] ) && ! $setup[ 'setup-complete' ] )  ) {
+			return $this->setup_class();
+		}
+
 
 
 	}
@@ -212,6 +213,7 @@ class JP_Rand_AFF {
 	 * @return jp_rand_aff_pods_setup
 	 */
 	private function setup_class( $delete_existing = false, $delete_only = false ) {
+
 		include( 'jp_rand_aff_pods_setup.php' );
 
 		$class = new jp_rand_aff_pods_setup( $delete_existing, $delete_only );
@@ -306,7 +308,11 @@ function jp_rand_aff_admin_notice_pods_min_version_fail() {
 
 }
 
+function foo() {
+	include( 'jp_rand_aff_pods_setup.php' );
 
+	$class = new jp_rand_aff_pods_setup( true, true );
+}
 /**
  * Debug functions
  */

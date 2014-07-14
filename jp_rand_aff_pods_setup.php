@@ -26,7 +26,12 @@ class jp_rand_aff_pods_setup {
 			$main_pod = $this->create_pod( JP_RAND_AFF_MAIN_POD );
 			$settings_pod = $this->create_pod( JP_RAND_AFF_SET_POD );
 
-			$this->post_create_message( $main_pod, $settings_pod );
+			if ( intval( $main_pod ) > 0 && intval( $settings_pod ) > 0 ) {
+				$this->post_create_message( $main_pod, $settings_pod );
+				$this->mark_setup();
+			}
+
+
 		}
 
 	}
@@ -486,6 +491,20 @@ class jp_rand_aff_pods_setup {
 		$component_settings['components']['advanced-content-types'] = array();
 
 		update_option( 'pods_component_settings', json_encode($component_settings));
+	}
+
+	/**
+	 * Set an option to mark that the plugin was setup
+	 */
+	private function mark_setup() {
+		$value = array(
+			'setup-complete' 	=> true,
+			'plugin-version'	=> JP_RAND_AFF_VERSION,
+			'pods-version'		=> PODS_VERSION,
+		);
+
+		update_option( 'jp_rand_aff_setup', $value );
+
 	}
 
 
