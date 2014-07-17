@@ -37,7 +37,7 @@ License: GPL v2 or later
  */
 
 // don't call the file directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Define constants
@@ -196,11 +196,9 @@ class JP_Rand_AFF {
 	 */
 	public function setup() {
 		$setup = get_option( 'jp_rand_aff_setup', false );
-		if ( ! $setup  || ( isset( $setup[ 'setup-complete' ] ) && ! $setup[ 'setup-complete' ] )  ) {
+		if ( false === $setup  || ( isset( $setup[ 'setup-complete' ] ) && false === $setup[ 'setup-complete' ] )  ) {
 			return $this->setup_class();
 		}
-
-
 
 	}
 
@@ -308,10 +306,11 @@ function jp_rand_aff_admin_notice_pods_min_version_fail() {
 
 }
 
-function foo() {
+function jp_rand_aff_test_setup() {
+	update_option( 'jp_rand_aff_setup', false );
 	include( 'jp_rand_aff_pods_setup.php' );
 
-	$class = new jp_rand_aff_pods_setup( true, true );
+	$class = new jp_rand_aff_pods_setup( true, false );
 }
 /**
  * Debug functions

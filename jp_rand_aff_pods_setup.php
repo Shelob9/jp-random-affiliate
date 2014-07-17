@@ -163,7 +163,7 @@ class jp_rand_aff_pods_setup {
 					'show_in_nav_menus' => '1',
 					'show_in_admin_bar' => '1',
 				),
-			'storage' => 'meta',
+			'storage' => 'table',
 		);
 
 		return $main_pod;
