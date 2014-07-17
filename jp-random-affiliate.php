@@ -227,6 +227,24 @@ class JP_Rand_AFF {
 		pods_require_component( 'advanced-content-types' );
 	}
 
+	/**
+	 * Loads the front-end class.
+	 *
+	 * @return jp_rand_aff_front_end
+	 */
+	public function front_end() {
+		//@TODO options fo where to show
+		if ( ! is_admin() ) {
+			include_once( 'jp_rand_aff_front_end.php' );
+
+			$front_end = new jp_rand_aff_front_end();
+
+			return $front_end;
+
+		}
+
+	}
+
 
 
 } // JP_Rand_AFF
