@@ -20,7 +20,7 @@ class jp_rand_aff_front_end {
 		if ( $pods && is_pod( $pods ) && $pods->total() > 0  ) {
 			$template_name = apply_filters( 'jp_rand_aff_output_template', 'jp_rand_aff_output_template' );
 
-			if ( false !== ( $headline === $this->headline() ) ) {
+			if ( false !== ( $headline = $this->headline() ) ) {
 				$out .= '<h3 class="jp_rand_aff_headline">'.$headline.'</h3>';
 			}
 
@@ -32,13 +32,14 @@ class jp_rand_aff_front_end {
 				$template = $pods->template( $template_name );
 
 				if ( $template ) {
-					$out .= $template;
+					$out .= '<div class="jp-rand-aff-template">'.$template.'</div>';
 				}
 
 			}
 
 		}
 
+		pods_error( var_dump( $out ) );
 		if ( $out ) {
 			$out = '<div class="jp_rand_aff">'.$out;
 			$out = $out.'</div><!--.jp_rand_aff-->';
@@ -88,7 +89,7 @@ class jp_rand_aff_front_end {
 	}
 
 	private function limit() {
-		$pods = pod( JP_RAND_AFF_SET_POD );
+		$pods = $this->pod( JP_RAND_AFF_SET_POD );
 		if ( function_exists( 'is_phone' ) ) {
 			if ( is_phone() ) {
 				return $pods->field( 'per_page_m' );

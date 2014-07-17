@@ -93,7 +93,8 @@ class JP_Rand_AFF {
 		add_action( 'plugins_loaded', array( $this, 'require_act' ) );
 
 
-
+		//load front-end
+		add_action( 'init', array( $this, 'front_end' ) );
 	}
 
 	/**
