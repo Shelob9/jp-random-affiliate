@@ -29,6 +29,10 @@ class jp_rand_aff_pods_setup {
 			if ( intval( $main_pod ) > 0 && intval( $settings_pod ) > 0 ) {
 				$this->post_create_message( $main_pod, $settings_pod );
 				$this->mark_setup();
+
+				//clear pods cache
+				pods_cache_clear();
+				pods_transient_clear();
 			}
 
 
