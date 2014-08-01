@@ -210,10 +210,11 @@ class jp_rand_aff_front_end {
 	 */
 	private function item( $pods ) {
 		//Get the image based on device.
-		$img = false;
+		$img = $rct = false;
 		if ( function_exists( 'is_phone' ) ) {
 			if ( is_phone() ) {
 				$img = $pods->field( 'img_rct' );
+				$rct = true;
 			}
 
 			if ( is_tablet() ) {
@@ -222,14 +223,30 @@ class jp_rand_aff_front_end {
 		}
 		elseif ( wp_is_mobile() ) {
 			$img = $pods->field( 'img_rct' );
+			$rct = true;
 		}
 		else {
 			$img = $pods->field( 'img_sq' );
 		}
 
+		//get image demensions
+		if ( $rct ) {
+			/**
+			 * This filter is documented in jp-random-affiliate.php
+			 */
+			$dimensions = apply_filters( 'jp_random_affiliates_rct_size', array( 240, 100 ) );
+		}
+		else {
+			/**
+			 * This filter is documented in jp-random-affiliate.php
+			 */
+			$dimensions = apply_filters( 'jp_random_affiliates_sq_size', array( 240, 100 ) );
+		}
+		
 		//get url of image if we can
 		if ( $img  ) {
-			$img = pods_image_url( $img );
+			$img = wp_get_attachment_image_src( pods_image_id_from_field( $img ), $dimensions );
+			$img = $img[0];
 		}
 
 		//Put item description in a variable or set it false.
