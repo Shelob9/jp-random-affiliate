@@ -275,14 +275,16 @@ class jp_rand_aff_pods_setup {
 			'file_allowed_extensions' => '',
 		);
 		$img[ 'img_sqr' ] = array(
-					'name' => 'img_sq',
-					'label' => 'Image Square',
-					'description' => 'A square image for the affiliate link.',
+			'name' => 'img_sq',
+			'label' => 'Image Square',
+			'description' => 'A square image for the affiliate link. Will resize to 240x240.',
+			'help' => 'You may change the image size for square images using the "jp_random_affiliates_sq_size" filter.'
 		);
 		$img[ 'img_rct' ] = array(
 			'name' => 'img_rct',
 			'label' => 'Image Rectangle',
-			'description' => 'A rectangular image for the affiliate link.',
+			'description' => 'A rectangular image for the affiliate link. Will resize to 240x100',
+			'help' => 'You may change the image size for rectangular images using the "jp_random_affiliates_rct_size" filter.'
 		);
 
 		foreach( $img as $field => $settings ) {
