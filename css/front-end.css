@@ -7,6 +7,11 @@ li.jp-rand-aff-item {
     float: left;
 }
 
+li.jp-rand-aff-item img {
+    height: 240px;
+    width: 240px;
+}
+
 ul#jp-rand-aff-items li {
     margin-right: 2%;
 }

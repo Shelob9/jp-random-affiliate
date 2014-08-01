@@ -214,17 +214,8 @@ class jp_rand_aff_front_end {
 	private function item( $pods ) {
 		//Get the image based on device.
 		$img = $rct = false;
-		if ( function_exists( 'is_phone' ) ) {
-			if ( is_phone() ) {
-				$img = $pods->field( 'img_rct' );
-				$rct = true;
-			}
 
-			if ( is_tablet() ) {
-				$img = $pods->field( 'img_sq' );
-			}
-		}
-		elseif ( wp_is_mobile() ) {
+		if ( jp_rand_aff_mobile_test()  ) {
 			$img = $pods->field( 'img_rct' );
 			$rct = true;
 		}
@@ -232,7 +223,7 @@ class jp_rand_aff_front_end {
 			$img = $pods->field( 'img_sq' );
 		}
 
-		//get image demensions
+		//get image dimensions
 		if ( $rct ) {
 			/**
 			 * This filter is documented in jp-random-affiliate.php
@@ -309,3 +300,4 @@ class jp_rand_aff_front_end {
 	}
 
 } 
+add_filter( 'jp_random_affiliates_sq_size', function() { return array( 120, 120 ); } );

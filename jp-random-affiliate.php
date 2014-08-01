@@ -52,6 +52,10 @@ define( 'JP_RAND_AFF_VERSION', '0.0.1' );
 define( 'JP_RAND_AFF_MAIN_POD', 'jp_rand_aff' );
 define( 'JP_RAND_AFF_SET_POD', 'jp_rand_aff_set' );
 
+if ( ! defined( 'JP_RAND_AFF_FORCE_MOBILE' ) ) {
+	define( 'JP_RAND_ADD_FORCE_MOBILE', true );
+}
+
 /**
  * JP_Rand_AFF class
  *
@@ -155,19 +159,15 @@ class JP_Rand_AFF {
 		 */
 		wp_enqueue_style( 'jp-rand-aff-styles', trailingslashit( JP_RAND_AFF_URL ) . 'css/front-end.css' );
 
+		if ( false !== ( $inline_css = $this->inline_css() )  ) {
+			wp_add_inline_style( 'jp-rand-aff-styles', $inline_css );
+		}
+
 		/**
 		 * All scripts goes here
 		 */
 		wp_enqueue_script( 'jp-rand-aff-scripts', trailingslashit( JP_RAND_AFF_URL ) . 'js/front-end.js', array( 'jquery' ), false, true );
 
-
-		/**
-		 * Example for setting up text strings from Javascript files for localization
-		 *
-		 * Uncomment line below and replace with proper localization variables.
-		 */
-		// $translation_array = array( 'some_string' => __( 'Some string to translate', 'jp-rand-aff' ), 'a_value' => '10' );
-		// wp_localize_script( 'jp-rand-aff-scripts', 'podsExtend', $translation_array ) );
 
 	}
 
@@ -258,16 +258,7 @@ class JP_Rand_AFF {
 			//get value of field
 			$img = $pieces[ 'fields' ][ 'img_sq' ][ 'value' ];
 
-			/**
-			 * Set the dimensions for square images
-			 *
-			 * @since 0.0.1
-			 *
-			 * @param array $dimensions an array of image dimensions
-			 *
-			 * @return The dimensions for square images
-			 */
-			$dimensions = apply_filters( 'jp_random_affiliates_sq_size', array( 240, 240 ) );
+			$dimensions = $this->image_dimensions( 'sq' );
 
 			//get the array key, which is the ID
 			$img = key( $img );
@@ -279,6 +270,39 @@ class JP_Rand_AFF {
 		if ( isset( $pieces[ 'fields' ][ 'img_rct' ][ 'value' ] ) ) {
 			$img = $pieces[ 'fields' ][ 'img_rct' ][ 'value' ];
 
+			$dimensions = $this->image_dimensions( 'rct' );
+
+			$img = key( $img );
+
+			pods_image_resize( $img, $dimensions );
+			
+		}
+
+	}
+
+	/**
+	 * Get image size dimensions
+	 *
+	 * @param string $size rct|sq
+	 *
+	 * @return mixed|void
+	 */
+	function image_dimensions( $size = 'sq' ) {
+		if ( $size === 'sq' ) {
+			/**
+			 * Set the dimensions for square images
+			 *
+			 * @since 0.0.1
+			 *
+			 * @param array $dimensions an array of image dimensions
+			 *
+			 * @return The dimensions for square images
+			 */
+			return apply_filters( 'jp_random_affiliates_sq_size', $this->square_default() );
+
+		}
+
+		if ( $size === 'rct' ) {
 			/**
 			 * Set the dimensions for square images
 			 *
@@ -288,13 +312,68 @@ class JP_Rand_AFF {
 			 *
 			 * @return The dimensions for rectangular images
 			 */
-			$dimensions = apply_filters( 'jp_random_affiliates_rct_size', array( 240, 100 ) );
+			return apply_filters( 'jp_random_affiliates_rct_size', $this->rectangle_default() );
 
-			$img = key( $img );
-
-			pods_image_resize( $img, $dimensions );
-			
 		}
+
+	}
+
+	/**
+	 * The default square image dimensions
+	 *
+	 * @return array
+	 */
+	private function square_default() {
+
+		return array( 240, 240 );
+
+	}
+
+	/**
+	 * The default rectangle image dimensions
+	 *
+	 * @return array
+	 */
+	private function rectangle_default() {
+
+		return array( 240, 100 );
+
+	}
+
+	/**
+	 * Outputs the inline CSS
+	 *
+	 * Will be used to switch to rectangle mode or to override main CSS if image sizes are changed via filters.
+	 *
+	 * @since 0.0.1
+	 *
+	 * @return bool|string
+	 */
+	function inline_css() {
+		$inline_css = false;
+
+		if ( jp_rand_aff_mobile_test() || JP_RAND_ADD_FORCE_MOBILE  ) {
+		$dimensions = $this->image_dimensions( 'rct' );
+			$inline_css =
+					"li.jp-rand-aff-item img {
+					width: {$dimensions[0]}px;
+					height: {$dimensions[1]}px;
+				}";
+
+		}
+		else {
+			$dimensions = $this->image_dimensions( 'sq');
+			if ( $dimensions !== $this->square_default()  ) {
+				$inline_css =
+					"li.jp-rand-aff-item img {
+					width: {$dimensions[0]}px;
+					height: {$dimensions[1]}px;
+				}";
+
+			}
+		}
+
+		return $inline_css;
 
 	}
 
@@ -386,6 +465,34 @@ function jp_rand_aff_test_setup() {
 
 	$class = new jp_rand_aff_pods_setup( true, false );
 }
+
+/**
+ * Checks if we want square or rectangle images
+ *
+ * @return bool
+ */
+function jp_rand_aff_mobile_test() {
+	if ( function_exists( 'is_phone' ) ) {
+		if ( is_phone() ) {
+			return true;
+
+		}
+
+		if ( is_tablet() ) {
+			return false;
+		}
+	}
+	elseif ( wp_is_mobile() ) {
+		return true;
+
+	}
+	else {
+		return false;
+
+	}
+
+}
+
 /**
  * Debug functions
  */
