@@ -158,7 +158,7 @@ class JP_Rand_AFF {
 		/**
 		 * All scripts goes here
 		 */
-		wp_enqueue_script( 'jp-rand-aff-scripts', trailingslashit( JP_RAND_AFF_URL ) . 'js/front-end.js', array( ), false, true );
+		wp_enqueue_script( 'jp-rand-aff-scripts', trailingslashit( JP_RAND_AFF_URL ) . 'js/front-end.js', array( 'jquery' ), false, true );
 
 
 		/**

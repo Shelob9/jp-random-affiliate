@@ -1,0 +1,35 @@
+#jp_rand_aff {
+    height: 300px;
+}
+
+li.jp-rand-aff-item {
+    display: inline;
+    float: left;
+}
+
+ul#jp-rand-aff-items li {
+    margin-right: 2%;
+}
+
+/* one item */
+ul#jp-rand-aff-items li:first-child:nth-last-child(1){
+    width: 100%;
+}
+
+/* two items */
+ul#jp-rand-aff-items li:first-child:nth-last-child(2),
+ul#jp-rand-aff-items li:first-child:nth-last-child(2) ~ li {
+    width: 46%;
+
+}
+
+/* three items */
+ul#jp-rand-aff-items li:first-child:nth-last-child(3),
+ul#jp-rand-aff-items li:first-child:nth-last-child(3) ~ li {
+    width: 30.3333%;
+}
+
+
+ul#jp-rand-aff-items li:first-child {
+    margin-left: 2%;
+}

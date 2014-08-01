@@ -26,24 +26,27 @@ class jp_rand_aff_front_end {
 			if ( ( $headline = $this->headline() ) ) {
 				$out .= '<h3 class="jp_rand_aff_headline">'.$headline.'</h3>';
 			}
-
+			$out .= '<ul id="jp-rand-aff-items">';
 			//output each item
 			while( $pods->fetch() ) {
 
 				$item = $this->item( $pods );
 
 				if ( $item ) {
-					$out .= '<div class="jp-rand-aff-item" id="jp-rand-aff-item' . $pods->id() . '">'.$item.'</div>';
+					$out .= '<li class="jp-rand-aff-item" id="jp-rand-aff-item' . $pods->id() . '">'.$item.'</li>';
 				}
 
 			}
+
+			$out .='</ul>';
+
 
 		}
 
 		//output if we have output
 		if ( $out ) {
-			$out = '<div class="jp_rand_aff">'.$out;
-			$out = $out.'</div><!--.jp_rand_aff-->';
+			$out = '<div id="jp_rand_aff">'.$out;
+			$out = $out.'</div><!--#jp_rand_aff-->';
 
 			return $out;
 
@@ -242,7 +245,7 @@ class jp_rand_aff_front_end {
 			 */
 			$dimensions = apply_filters( 'jp_random_affiliates_sq_size', array( 240, 100 ) );
 		}
-		
+
 		//get url of image if we can
 		if ( $img  ) {
 			$img = wp_get_attachment_image_src( pods_image_id_from_field( $img ), $dimensions );
