@@ -21,7 +21,6 @@ class jp_rand_aff_front_end {
 		//start output false
 		$out = false;
 		if ( $pods && is_pod( $pods ) && $pods->total() > 0  ) {
-			$template_name = apply_filters( 'jp_rand_aff_output_template', 'jp_rand_aff_output_template' );
 
 			//get the headline and output, if it is set.
 			if ( ( $headline = $this->headline() ) ) {
@@ -228,6 +227,11 @@ class jp_rand_aff_front_end {
 			$img = $pods->field( 'img_sq' );
 		}
 
+		//get url of image if we can
+		if ( $img  ) {
+			$img = pods_image_url( $img );
+		}
+
 		//Put item description in a variable or set it false.
 		if ( '' === ( $desc = $pods->display( 'desc' ) ) ) {
 			$desc = false;
@@ -235,17 +239,52 @@ class jp_rand_aff_front_end {
 
 		$out = '';
 
+		//start output by creating image tag/link if we can
 		if ( $img && is_string( $img ) ) {
-			$out .= '<img src="' . $img . '">';
+			//create an image tag
+			$img = '<img src="' . $img . '">';
+
+			//make it clickable
+			$img = $this->link( $pods, $img );
+
+			//add it to output
+			$out .= $img;
 		}
 
+		//add description to output
 		if ( $desc ) {
 			$out .= '<p class="jp-rand-aff-desc">' . $desc . '</p>';
 		}
 
+		//output if we have anything to output
 		if ( $out ) {
 			return $out;
 		}
+
+	}
+
+	/**
+	 * Wraps text in an HTML link, using the link field if it's valid.
+	 *
+	 * @param Pods|obj $pods The Pods object
+	 * @param string $text The text to wrap in
+	 */
+	private function link( $pods, $text ) {
+		//get the link
+		$link = $pods->field( 'link' );
+
+		//check that its not empty or invalid
+		if ( $link && $link !== '' && filter_var( $link , FILTER_VALIDATE_URL ) ) {
+
+			//wrap up as link
+			$link = '<a href="'.$link.'" >'.$text.'</a>';
+		}
+		else {
+			//if it failed, set return var to equal the input (ie do nothing)
+			$link = $text;
+		}
+
+		return $link;
 
 	}
 
