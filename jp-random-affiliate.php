@@ -296,14 +296,8 @@ class JP_Rand_AFF {
 			
 		}
 
-
-
-
 	}
 
-	function resize( $id, $demensions ) {
-
-	}
 
 
 
