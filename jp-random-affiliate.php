@@ -95,6 +95,10 @@ class JP_Rand_AFF {
 
 		//load front-end
 		add_action( 'init', array( $this, 'front_end' ) );
+
+		$pod_name = JP_RAND_AFF_MAIN_POD;
+		add_action( "pods_api_pre_save_pod_item_{$pod_name}", array( $this, 'image_size' ) );
+
 	}
 
 	/**
@@ -245,6 +249,63 @@ class JP_Rand_AFF {
 		}
 
 	}
+
+	public function image_size( $pieces ) {
+
+		//get 'img_sq' field's value, if isset and resize
+		if ( isset( $pieces[ 'fields' ][ 'img_sq' ][ 'value' ] ) ) {
+
+			//get value of field
+			$img = $pieces[ 'fields' ][ 'img_sq' ][ 'value' ];
+
+			/**
+			 * Set the dimensions for square images
+			 *
+			 * @since 0.0.1
+			 *
+			 * @param array $dimensions an array of image dimensions
+			 *
+			 * @return The dimensions for square images
+			 */
+			$dimensions = apply_filters( 'jp_random_affiliates_sq_size', array( 240, 240 ) );
+
+			//get the array key, which is the ID
+			$img = key( $img );
+
+			//resize the image
+			pods_image_resize( $img, $dimensions );
+		}
+
+		if ( isset( $pieces[ 'fields' ][ 'img_rct' ][ 'value' ] ) ) {
+			$img = $pieces[ 'fields' ][ 'img_rct' ][ 'value' ];
+
+			/**
+			 * Set the dimensions for square images
+			 *
+			 * @since 0.0.1
+			 *
+			 * @param array $dimensions an array of image dimensions
+			 *
+			 * @return The dimensions for rectangular images
+			 */
+			$dimensions = apply_filters( 'jp_random_affiliates_rct_size', array( 240, 100 ) );
+
+			$img = key( $img );
+
+			pods_image_resize( $img, $dimensions );
+			
+		}
+
+
+
+
+	}
+
+	function resize( $id, $demensions ) {
+
+	}
+
+
 
 
 
