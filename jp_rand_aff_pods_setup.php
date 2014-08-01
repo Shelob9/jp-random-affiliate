@@ -25,8 +25,6 @@ class jp_rand_aff_pods_setup {
 
 			$main_pod = $this->create_pod( JP_RAND_AFF_MAIN_POD );
 			$settings_pod = $this->create_pod( JP_RAND_AFF_SET_POD );
-
-			$this->add_template();
 			
 			if ( intval( $main_pod ) > 0 && intval( $settings_pod ) > 0 ) {
 				$this->post_create_message( $main_pod, $settings_pod );
@@ -509,22 +507,6 @@ class jp_rand_aff_pods_setup {
 
 	}
 
-	/**
-	 * Add our template
-	 */
-	private function add_template() {
-		$template_name = apply_filters( 'jp_rand_aff_output_template', 'jp_rand_aff_output_template' );
-
-		//try and load the template. If it doesn't exist, this will return null
-		if ( is_null( get_page_by_title( $template_name, 'OBJECT', '_pods_template' ) ) ) {
-			$post = array(
-				'post_type' 	=> '_pods_template',
-				'post_content'	=> '@TODO AFF CONTENT',
-			);
-
-			wp_insert_post( $post );
-		}
-	}
 
 
 } 
