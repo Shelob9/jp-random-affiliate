@@ -157,16 +157,31 @@ class JP_Rand_AFF {
 	public function enqueue_scripts() {
 
 		/**
-		 * All styles goes here
+		 * CSS
 		 */
-		wp_enqueue_style( 'jp-rand-aff-styles', trailingslashit( JP_RAND_AFF_URL ) . 'css/front-end.css' );
+		$src = trailingslashit( JP_RAND_AFF_URL ) . 'css/front-end.css';
+
+		/**
+		 * Override the location for this plugin to load CSS from
+		 *
+		 * Set to null to prevent it from being loaded at all.
+		 *
+		 * @since 0.0.1
+		 *
+		 * @param string|null $src Path to CSS or null.
+		 *
+		 * @return $string Path to CSS
+		 */
+		$src = apply_filters( 'jp_rand_aff_css_source', $src );
+
+		wp_enqueue_style( 'jp-rand-aff-styles', $src  );
 
 		if ( false !== ( $inline_css = $this->inline_css() )  ) {
 			wp_add_inline_style( 'jp-rand-aff-styles', $inline_css );
 		}
 
 		/**
-		 * All scripts goes here
+		 * JS
 		 */
 		wp_enqueue_script( 'jp-rand-aff-scripts', trailingslashit( JP_RAND_AFF_URL ) . 'js/front-end.js', array( 'jquery' ), false, true );
 
