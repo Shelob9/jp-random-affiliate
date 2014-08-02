@@ -90,9 +90,6 @@ class JP_Rand_AFF {
 		// Loads frontend scripts and styles
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
-		// Loads admin scripts and styles
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
-
 		//Require Pods ACT component
 		add_action( 'plugins_loaded', array( $this, 'require_act' ) );
 
