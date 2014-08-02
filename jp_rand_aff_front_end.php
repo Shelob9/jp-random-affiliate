@@ -223,18 +223,15 @@ class jp_rand_aff_front_end {
 			$img = $pods->field( 'img_sq' );
 		}
 
+		//get instance of main class
+		$main_class = $GLOBALS[ 'JP_Rand_AFF' ];
+
 		//get image dimensions
 		if ( $rct ) {
-			/**
-			 * This filter is documented in jp-random-affiliate.php
-			 */
-			$dimensions = apply_filters( 'jp_random_affiliates_rct_size', array( 240, 100 ) );
+			$dimensions = $main_class->image_dimensions( 'sq' );
 		}
 		else {
-			/**
-			 * This filter is documented in jp-random-affiliate.php
-			 */
-			$dimensions = apply_filters( 'jp_random_affiliates_sq_size', array( 240, 100 ) );
+			$dimensions = $main_class->image_dimensions( 'rct' );
 		}
 
 		//get url of image if we can
