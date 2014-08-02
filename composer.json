@@ -1,0 +1,28 @@
+{
+    "name" : "shelob9/jp-random-affiliate",
+    "description" : "Automatic front-end output of Pods Templates.",
+    "type" : "wordpress-plugin",
+    "keywords" : [ "pods", "wordpress", "affliates" ],
+    "license" : "GPL-2.0+",
+    "authors" : [
+        {
+            "name" : "Josh Pollock",
+            "email" : "josh@pods.io",
+            "homepage" : "http://JoshPress.net",
+            "role" : "Lead Developer"
+        }
+    ],
+    "require" : {
+        "composer/installers" : "~1.0.0",
+        "php" : ">=5.2.4",
+        "wpackagist-plugin/pods" : ">=2.4.3"
+    },
+    "extra" : {
+        "installer-name" : "jp-random-affiliate"
+    },
+    "homepage" : "https://github.com/Shelob9/jp-random-affiliate",
+    "support": {
+        "issues": "https://github.com/Shelob9/jp-random-affiliate/issues",
+        "source": "https://github.com/Shelob9/jp-random-affiliate"
+    }
+}
