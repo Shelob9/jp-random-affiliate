@@ -53,7 +53,7 @@ define( 'JP_RAND_AFF_MAIN_POD', 'jp_rand_aff' );
 define( 'JP_RAND_AFF_SET_POD', 'jp_rand_aff_set' );
 
 if ( ! defined( 'JP_RAND_AFF_FORCE_MOBILE' ) ) {
-	define( 'JP_RAND_ADD_FORCE_MOBILE', true );
+	define( 'JP_RAND_ADD_FORCE_MOBILE', false );
 }
 
 /**
@@ -287,7 +287,7 @@ class JP_Rand_AFF {
 	 *
 	 * @return mixed|void
 	 */
-	function image_dimensions( $size = 'sq' ) {
+	public function image_dimensions( $size = 'sq' ) {
 		if ( $size === 'sq' ) {
 			/**
 			 * Set the dimensions for square images
@@ -512,3 +512,4 @@ if ( !function_exists( 'print_x2' ) ) :
 		echo  '</pre>';
 	}
 endif;
+
