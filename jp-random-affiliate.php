@@ -174,27 +174,6 @@ class JP_Rand_AFF {
 	}
 
 	/**
-	 * Enqueue admin scripts
-	 *
-	 * Allows plugin assets to be loaded.
-	 *
-	 * @since 0.0.1
-	 */
-	public function admin_enqueue_scripts() {
-
-		/**
-		 * All admin styles goes here
-		 */
-		wp_enqueue_style( 'jp-rand-aff-admin-styles', plugins_url( 'css/admin.css', __FILE__ ) );
-
-		/**
-		 * All admin scripts goes here
-		 */
-		wp_enqueue_script( 'jp-rand-aff-admin-scripts', plugins_url( 'js/admin.js', __FILE__ ), array( ), false, true );
-
-	}
-
-	/**
 	 * Setup the Pods
 	 *
 	 * Check if we have done setup and if not, do it.
