@@ -1,5 +1,5 @@
 #jp_rand_aff {
-    height: 300px;
+    height: 160px;
 }
 
 li.jp-rand-aff-item {
@@ -8,8 +8,8 @@ li.jp-rand-aff-item {
 }
 
 li.jp-rand-aff-item img {
-    height: 240px;
-    width: 240px;
+    height: 120px;
+    width: 120px;
 }
 
 ul#jp-rand-aff-items li {

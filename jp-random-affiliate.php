@@ -101,8 +101,10 @@ class JP_Rand_AFF {
 		add_action( 'init', array( $this, 'front_end' ) );
 
 		$pod_name = JP_RAND_AFF_MAIN_POD;
-		add_action( "pods_api_pre_save_pod_item_{$pod_name}", array( $this, 'image_size' ) );
+		add_action( "pods_api_pre_save_pod_item_{$pod_name}", array( $this, 'image_resize_on_save' ) );
 
+		//check for image size change
+		add_action( 'admin_init', array( $this, 'update_image_sizes' ) );
 	}
 
 	/**
@@ -205,6 +207,16 @@ class JP_Rand_AFF {
 			return $this->setup_class();
 		}
 
+		//set the image size check options
+		$sizes = array(
+			'sq' => 'jp_rand_aff_sq_dim',
+			'rct' => 'jp_rand_aff_rct_dim'
+		);
+
+		foreach( $sizes as $size => $option ) {
+			update_option( $option, $this->image_dimensions( $size ) );
+		}
+
 	}
 
 	/**
@@ -250,32 +262,120 @@ class JP_Rand_AFF {
 
 	}
 
-	public function image_size( $pieces ) {
-
-		//get 'img_sq' field's value, if isset and resize
+	/**
+	 * Resizes images when saved.
+	 *
+	 * @since 0.0.1
+	 *
+	 * @uses pods_api_pre_save_pod_item_{$pod_name} filter
+	 *
+	 * @param $pieces
+	 */
+	public function image_resize_on_save( $pieces ) {
 		if ( isset( $pieces[ 'fields' ][ 'img_sq' ][ 'value' ] ) ) {
-
-			//get value of field
 			$img = $pieces[ 'fields' ][ 'img_sq' ][ 'value' ];
-
-			$dimensions = $this->image_dimensions( 'sq' );
-
 			//get the array key, which is the ID
 			$img = key( $img );
 
-			//resize the image
-			pods_image_resize( $img, $dimensions );
+			$this->image_size( $img , 'sq'  );
 		}
 
 		if ( isset( $pieces[ 'fields' ][ 'img_rct' ][ 'value' ] ) ) {
 			$img = $pieces[ 'fields' ][ 'img_rct' ][ 'value' ];
 
+			$img = key( $img );
+			$this->image_size( $img, 'rct' );
+		}
+
+	}
+
+	/**
+	 * Resizes images to our specific sizes or arbitrary size
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param int $img Image ID to resize
+	 * @param array|string $dimensions Either an array of dimensions to use or rct|sq for our standard sizes.
+	 *
+	 * @return bool True if image was resize, false if not.
+	 */
+	private function image_size( $img, $dimensions ) {
+		if ( is_string( $dimensions ) ) {
+			$dimensions = $this->image_dimensions( $dimensions );
+		}
+
+
+		if ( is_array( $dimensions ) ) {
+			return pods_image_resize( $img, $dimensions );
+		}
+
+	}
+
+	/**
+	 * Bulk resize images used by this plugin
+	 *
+	 * @since 0.0.1
+	 *
+	 * @param $limit
+	 */
+	function image_bulk_resize( $limit = -1, $which = 'sq'  ) {
+		if ( $which === 'sq' ) {
+			//get square dimensions
+			$dimensions = $this->image_dimensions( 'sq' );
+
+			//set field name
+			$field = 'img_sq';
+		}
+		elseif ( $which === 'rct' ) {
+			//get rectangle dimensions
 			$dimensions = $this->image_dimensions( 'rct' );
 
-			$img = key( $img );
+			//set field name
+			$field = 'img_rct';
+		}
+		else {
+			return;
+		}
 
-			pods_image_resize( $img, $dimensions );
-			
+
+		$pods = pods( JP_RAND_AFF_MAIN_POD, array( 'limit' => $limit ) );
+		if ( $pods->total() > 0 ) {
+
+			while ( $pods->fetch() ) {
+
+				//get image field
+				$img = $pods->field( $field );
+
+				//get ID from field
+				$img = pods_image_id_from_field(  $img );
+
+				//resize
+				$this->image_size( $img, $dimensions );
+
+			}
+
+		}
+
+	}
+
+	/**
+	 * Checks on admin_init if sizes have been changed for images and if so resizes
+	 *
+	 * @since 0.0.1
+	 */
+	function update_image_sizes() {
+		$sizes = array(
+			'sq' => 'jp_rand_aff_sq_dim',
+			'rct' => 'jp_rand_aff_rct_dim'
+		);
+
+		foreach( $sizes as $size => $option ) {
+			if ( $this->image_dimensions( $size ) !== maybe_unserialize( get_option( $option, 0 ) ) ) {
+				$dimensions = $this->image_dimensions( $size );
+				$this->image_bulk_resize( -1, $size );
+				update_option( $option, $dimensions );
+			}
+
 		}
 
 	}
@@ -325,7 +425,7 @@ class JP_Rand_AFF {
 	 */
 	private function square_default() {
 
-		return array( 240, 240 );
+		return array( 120, 120 );
 
 	}
 
@@ -336,7 +436,7 @@ class JP_Rand_AFF {
 	 */
 	private function rectangle_default() {
 
-		return array( 240, 100 );
+		return array( 120, 50 );
 
 	}
 
@@ -376,11 +476,6 @@ class JP_Rand_AFF {
 		return $inline_css;
 
 	}
-
-
-
-
-
 
 } // JP_Rand_AFF
 
