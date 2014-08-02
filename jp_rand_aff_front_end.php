@@ -299,5 +299,4 @@ class jp_rand_aff_front_end {
 
 	}
 
-} 
-add_filter( 'jp_random_affiliates_sq_size', function() { return array( 120, 120 ); } );
+}
